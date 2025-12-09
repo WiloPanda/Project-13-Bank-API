@@ -3,9 +3,9 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Lazy loading des composants
 const Layout = lazy(() => import('../Layout/Layout'));
-const UserProfile = lazy(() => import('../Pages/Private/UserProfile'));
+const Profile = lazy(() => import('../Pages/Private/User'));
 const Home = lazy(() => import('../Pages/Public/Home'));
-const LogIn = lazy(() => import('../Pages/Public/LogIn'));
+const Login = lazy(() => import('../Pages/Public/Login'));
 
 const publicRouter = createBrowserRouter([
     {
@@ -22,11 +22,11 @@ const publicRouter = createBrowserRouter([
             },
             {
                 path: "login",
-                element: <LogIn />,
+                element: <Login />,
             },
             {
                 path: "profile",
-                element: <UserProfile />,
+                element: <Profile />,
             }
         ]
     }

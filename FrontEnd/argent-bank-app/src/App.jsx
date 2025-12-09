@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import publicRouter from '@/Router/PublicRouter';
 import Loading from '@/Utils/Loading';
-// import '@/Sass/Import.scss'
+import '@/Sass/_main.scss';
 
 
 function App() {
