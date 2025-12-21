@@ -1,35 +1,41 @@
-import React, { lazy } from 'react';
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import React, { lazy } from 'react'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
+import PrivateRoute from '@/Pages/Private/PrivateRoute'
 
 // Lazy loading des composants
-const Layout = lazy(() => import('../Layout/Layout'));
-const Profile = lazy(() => import('../Pages/Private/User'));
-const Home = lazy(() => import('../Pages/Public/Home'));
-const Login = lazy(() => import('../Pages/Public/Login'));
+const Layout = lazy(() => import('@/Layout/Layout'))
+const Profile = lazy(() => import('@/Pages/Private/Profile'))
+const Home = lazy(() => import('@/Pages/Public/Home'))
+const Login = lazy(() => import('@/Pages/Public/Login'))
 
 const publicRouter = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         element: <Layout />,
         children: [
             {
                 index: true,
-                element: <Navigate to="/home" replace />
+                element: <Navigate to="/home" replace />,
             },
             {
-                path: "home",
+                path: 'home',
                 element: <Home />,
             },
             {
-                path: "login",
+                path: 'login',
                 element: <Login />,
             },
             {
-                path: "profile",
-                element: <Profile />,
-            }
-        ]
-    }
-]);
+                element: <PrivateRoute />,
+                children: [
+                    {
+                        path: 'profile',
+                        element: <Profile />,
+                    },
+                ],
+            },
+        ],
+    },
+])
 
-export default publicRouter;
+export default publicRouter

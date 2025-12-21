@@ -33,6 +33,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
   /user/signup:
     post:
       tags:
@@ -57,32 +58,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/{userId}/account/{accountId}/transaction/{transactionId}:
-    get:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Transaction
-      description: Get all infos of a transaction
-      parameters:
-        - in: body
-          name: body
-          description: Get all infos of a transaction
-          required: true
-          schema:
-            $ref: '#/definitions/Transaction'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction Successfull
-          schema:
-            $ref: '#/definitions/TransactionResponse'
-        '400':
-          description: Transaction not found
-        '500':
-          description: Internal Server Error
+
   /user/profile:
     post:
       security:
@@ -96,11 +72,12 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
       produces:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
@@ -119,6 +96,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: body
           name: body
           description: Update user profile attributes
@@ -129,18 +107,170 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
         '500':
           description: Internal Server Error
+
+  /user/accounts:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Account Module
+      summary: User Accounts API
+      description: API for fetching all user accounts
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User accounts retrieved successfully
+          schema:
+            $ref: '#/definitions/AccountsResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
+  /user/accounts/{accountId}/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Account Transactions API
+      description: API for fetching all transactions for a specific account for the current month
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: query
+          name: month
+          description: Month for transactions (format YYYY-MM, optional, defaults to current month)
+          required: false
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transactions retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Unauthorized
+        '404':
+          description: Account not found
+        '500':
+          description: Internal Server Error
+
+  /user/accounts/{accountId}/transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Transaction Details API
+      description: API for fetching details of a specific transaction
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: path
+          name: transactionId
+          description: Transaction ID
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details retrieved successfully
+          schema:
+            $ref: '#/definitions/TransactionDetailsResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Update Transaction API
+      description: API for updating transaction information (category and notes only)
+      parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+        - in: path
+          name: accountId
+          description: Account ID
+          required: true
+          type: string
+        - in: path
+          name: transactionId
+          description: Transaction ID
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Update transaction attributes
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionUpdate'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction updated successfully
+          schema:
+            $ref: '#/definitions/TransactionDetailsResponse'
+        '400':
+          description: Invalid Fields
+        '401':
+          description: Unauthorized
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+
 definitions:
   User:
     properties:
@@ -156,20 +286,7 @@ definitions:
       lastName:
         type: string
         description: user last name
-  Transaction:
-    properties:
-      date:
-        type: date
-        description: date of transaction
-      description: 
-        type : string
-        description: description of transaction
-      amount:
-        type: string
-        description: user first name
-      lastName:
-        type: string
-        description: user last name
+
   Login:
     properties:
       email:
@@ -178,6 +295,7 @@ definitions:
       password:
         type: string
         description: user password
+
   ApiResponse:
     type: object
     properties:
@@ -192,22 +310,7 @@ definitions:
             type: string
           email:
             type: string
-  TransactionResponse:
-    type: object
-    properties:
-      status:
-        type: integer
-      message:
-        type: string
-      body:
-        type: object
-        properties:
-          id:
-            type: string
-          date:
-            type : date
-          description: 
-            type : string  
+
   LoginResponse:
     type: object
     properties:
@@ -220,3 +323,131 @@ definitions:
         type: string
       lastName:
         type: string
+
+  Account:
+    type: object
+    properties:
+      accountId:
+        type: string
+        description: account ID
+      accountName:
+        type: string
+        description: account name
+      accountNumber:
+        type: string
+        description: account number
+      balance:
+        type: number
+        description: current account balance
+      balanceType:
+        type: string
+        description: type of balance
+
+  AccountsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: array
+        items:
+          $ref: '#/definitions/Account'
+
+  Transaction:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        description: transaction ID
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+      description:
+        type: string
+        description: transaction description
+      amount:
+        type: number
+        description: transaction amount
+      balance:
+        type: number
+        description: account balance after transaction
+      transactionType:
+        type: string
+        description: type of transaction
+      category:
+        type: string
+        description: transaction category
+      notes:
+        type: string
+        description: user notes for the transaction
+
+  TransactionsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          accountId:
+            type: string
+          month:
+            type: string
+          transactions:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+
+  TransactionDetails:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        description: transaction ID
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+      description:
+        type: string
+        description: transaction description
+      amount:
+        type: number
+        description: transaction amount
+      balance:
+        type: number
+        description: account balance after transaction
+      transactionType:
+        type: string
+        description: type of transaction (e.g., Electronic)
+      category:
+        type: string
+        description: transaction category (e.g., Food)
+      notes:
+        type: string
+        description: user notes for the transaction
+
+  TransactionDetailsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        $ref: '#/definitions/TransactionDetails'
+
+  TransactionUpdate:
+    type: object
+    properties:
+      category:
+        type: string
+        description: transaction category
+      notes:
+        type: string
+        description: user notes for the transaction
