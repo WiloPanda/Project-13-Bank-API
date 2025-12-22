@@ -60,7 +60,7 @@ paths:
           description: Internal Server Error
 
   /user/profile:
-    post:
+    get:
       security:
         - Bearer: []
       tags:

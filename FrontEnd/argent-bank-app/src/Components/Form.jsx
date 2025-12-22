@@ -38,7 +38,7 @@ const Form = () => {
             <h1>Sign In</h1>
             <form onSubmit={handleSubmit}>
 
-                <div className="input-wrapper">
+                <div className="input-wrapper-form">
                     <label htmlFor="username">Username</label>
                     <input type="text"
                         id="username"
@@ -47,7 +47,7 @@ const Form = () => {
                         onChange={(e) => setEmail(e.target.value)} />
                 </div>
 
-                <div className="input-wrapper">
+                <div className="input-wrapper-form">
                     <label htmlFor="password">Password</label>
                     <input type="password"
                         id="password"

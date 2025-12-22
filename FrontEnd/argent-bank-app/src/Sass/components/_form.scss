@@ -27,18 +27,18 @@
   margin-left: 0.25rem;
 }
 
-.input-wrapper {
+.input-wrapper-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   text-align: left;
   margin-bottom: 1rem;
 }
 
-.input-wrapper label {
+.input-wrapper-form label {
   font-weight: bold;
 }
 
-.input-wrapper input {
+.input-wrapper-form input {
   padding: 5px;
   font-size: 1.2rem;
 }

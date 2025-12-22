@@ -68,7 +68,7 @@ const Profile = () => {
             {firstName} {lastName}!
           </h1>
           <button className="edit-button" onClick={handleEdit}>
-            Edit
+            Edit Name
           </button>
         </div>
       }
